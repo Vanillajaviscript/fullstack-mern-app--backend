@@ -7,18 +7,19 @@ const cors = require('cors');
 require('./config/config');
 const mongoose = require('mongoose');
 
-//Schema
+// Model
 const PeopleSchema = new mongoose.Schema({
   name: String,
   image: String,
   title: String
-});
+})
 
-const People = mongoose.model('People', PeopleSchema)
+const People = mongoose.model("People", PeopleSchema)
 
-app.use(express.json());
+app.use(cors());
 app.use(logger('dev'));
-app.use(cors())
+app.use(express.json());
+
 
 //Routes
 app.get('/', (req, res) => {
@@ -43,6 +44,7 @@ app.delete('/people/:id', async (req, res) => {
     res.status(400).json(error)
   }
 })
+
 //Update
 app.put('/people/:id', async (req, res) => {
   try {
@@ -55,7 +57,9 @@ app.put('/people/:id', async (req, res) => {
 //Create
 app.post('/people', async (req, res) => {
   try {
-    res.json( await People.create(req.body))
+    console.log(req.body)
+    let response = await People.create(req.body)
+    res.json(response)
   } catch (error) {
     res.status(400).json(error);
   }
@@ -69,6 +73,7 @@ app.get('/people/:id', async (req, res) => {
     res.status(400).json(error);
   }
 })
+
 app.listen(PORT, () => {
   console.log(`Server is live on ${PORT}`)
 });
